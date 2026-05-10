@@ -27,43 +27,18 @@ Sticker Alchemy is built with Node.js, Telegraf, Sharp, FFmpeg, and Lottie rende
 
 You can also send photos, stickers, GIFs, or short videos directly to the bot. It will pick the matching conversion automatically.
 
-## Security model
+## Installation
 
-Sticker Alchemy is **whitelist-only by default**.
+Prepare two things first:
 
-You must set one of:
-
-- `OWNER_ID=your_telegram_numeric_user_id`
-- `ALLOWED_USER_IDS=123456789,987654321`
-
-If you really want a public bot, explicitly set:
-
-```env
-PUBLIC_ACCESS=true
-```
-
-Do not commit your `.env` file. `.env` is ignored by Git.
-
-## Requirements
-
-### Docker installation
-
-Recommended for most users:
-
-- Docker
-- Docker Compose plugin
-- A Telegram bot token from [@BotFather](https://t.me/BotFather)
+- A Telegram Bot Token from [@BotFather](https://t.me/BotFather)
 - Your numeric Telegram user ID from [@userinfobot](https://t.me/userinfobot) or [@RawDataBot](https://t.me/RawDataBot)
 
-### Manual installation
+The bot uses whitelist mode by default. You must set `OWNER_ID` or `ALLOWED_USER_IDS`, otherwise the bot will refuse to start.
 
-- Node.js 22+
-- FFmpeg with `libvpx-vp9`
-- Native dependencies required by `sharp` and Chromium/Puppeteer
+### Option 1: Docker Compose
 
-Docker is easier because the image installs the needed system packages.
-
-## Quick start with Docker Compose
+Recommended for most servers.
 
 ```bash
 git clone https://github.com/shuijiao1/telegram-sticker-alchemy.git
@@ -72,7 +47,7 @@ cp .env.example .env
 nano .env
 ```
 
-Fill in at least:
+Edit `.env` and fill in at least:
 
 ```env
 BOT_TOKEN=123456:your_bot_token_here
@@ -80,7 +55,7 @@ OWNER_ID=123456789
 PUBLIC_ACCESS=false
 ```
 
-Start the bot:
+Start:
 
 ```bash
 docker compose up -d --build
@@ -105,9 +80,67 @@ git pull
 docker compose up -d --build
 ```
 
-## Manual installation
+### Option 2: Docker
 
-Install system packages on Debian/Ubuntu:
+If you do not want to use Docker Compose, build and run the image directly.
+
+```bash
+git clone https://github.com/shuijiao1/telegram-sticker-alchemy.git
+cd telegram-sticker-alchemy
+cp .env.example .env
+nano .env
+```
+
+Build:
+
+```bash
+docker build -t sticker-alchemy .
+```
+
+Run:
+
+```bash
+docker run -d \
+  --name sticker-alchemy \
+  --restart unless-stopped \
+  --env-file .env \
+  -v "$PWD/data:/app/data" \
+  -v "$PWD/tmp:/tmp/sticker-alchemy" \
+  sticker-alchemy
+```
+
+View logs:
+
+```bash
+docker logs -f sticker-alchemy
+```
+
+Stop and remove the container:
+
+```bash
+docker rm -f sticker-alchemy
+```
+
+Update:
+
+```bash
+git pull
+docker build -t sticker-alchemy .
+docker rm -f sticker-alchemy
+# Then run the docker run command above again.
+```
+
+### Option 3: Manual install
+
+Use this if you do not want Docker and are comfortable managing system dependencies yourself.
+
+Requirements:
+
+- Node.js 22+
+- FFmpeg with `libvpx-vp9`
+- Native dependencies required by `sharp` and Chromium/Puppeteer
+
+Install dependencies on Debian/Ubuntu:
 
 ```bash
 sudo apt update
@@ -128,7 +161,19 @@ nano .env
 npm start
 ```
 
-## Environment variables
+For long-term background running, use `systemd`, `pm2`, or another process manager.
+
+## Configuration
+
+Example `.env`:
+
+```env
+BOT_TOKEN=123456:your_bot_token_here
+OWNER_ID=123456789
+# ALLOWED_USER_IDS=123456789,987654321
+PUBLIC_ACCESS=false
+TMP_DIR=/tmp/sticker-alchemy
+```
 
 | Variable | Required | Default | Description |
 | --- | --- | --- | --- |
@@ -137,6 +182,8 @@ npm start
 | `ALLOWED_USER_IDS` | No | - | Comma-separated list of allowed numeric Telegram user IDs |
 | `PUBLIC_ACCESS` | No | `false` | Set to `true` to allow anyone to use the bot |
 | `TMP_DIR` | No | `/tmp/sticker-alchemy` | Temporary conversion directory |
+
+Do not commit your `.env` file. `.env` is ignored by Git.
 
 ## Notes and limits
 
