@@ -38,12 +38,11 @@ The bot uses whitelist mode by default. You must set `OWNER_ID` or `ALLOWED_USER
 
 ### Option 1: Docker Compose
 
-Recommended for most servers.
+Recommended for most servers. This uses the prebuilt GHCR image by default.
 
 ```bash
-git clone https://github.com/shuijiao1/telegram-sticker-alchemy.git
-cd telegram-sticker-alchemy
-cp .env.example .env
+mkdir -p sticker-alchemy && cd sticker-alchemy
+curl -fsSL https://raw.githubusercontent.com/shuijiao1/telegram-sticker-alchemy/main/.env.example -o .env
 nano .env
 ```
 
@@ -55,10 +54,29 @@ OWNER_ID=123456789
 PUBLIC_ACCESS=false
 ```
 
+Create `compose.yml`:
+
+```bash
+cat > compose.yml <<'EOF'
+services:
+  sticker-alchemy:
+    image: ghcr.io/shuijiao1/telegram-sticker-alchemy:latest
+    container_name: sticker-alchemy
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      TMP_DIR: ${TMP_DIR:-/tmp/sticker-alchemy}
+    volumes:
+      - ./data:/app/data
+      - ./tmp:${TMP_DIR:-/tmp/sticker-alchemy}
+EOF
+```
+
 Start:
 
 ```bash
-docker compose up -d --build
+docker compose up -d
 ```
 
 View logs:
@@ -76,25 +94,35 @@ docker compose down
 Update later:
 
 ```bash
-git pull
-docker compose up -d --build
+docker compose pull
+docker compose up -d
 ```
 
-### Option 2: Docker
-
-If you do not want to use Docker Compose, build and run the image directly.
+If you prefer building from source locally:
 
 ```bash
 git clone https://github.com/shuijiao1/telegram-sticker-alchemy.git
 cd telegram-sticker-alchemy
 cp .env.example .env
 nano .env
+docker compose up -d --build
 ```
 
-Build:
+### Option 2: Docker
+
+If you do not want to use Docker Compose, pull and run the GHCR image directly.
 
 ```bash
-docker build -t sticker-alchemy .
+mkdir -p sticker-alchemy/data sticker-alchemy/tmp
+cd sticker-alchemy
+curl -fsSL https://raw.githubusercontent.com/shuijiao1/telegram-sticker-alchemy/main/.env.example -o .env
+nano .env
+```
+
+Pull:
+
+```bash
+docker pull ghcr.io/shuijiao1/telegram-sticker-alchemy:latest
 ```
 
 Run:
@@ -106,7 +134,7 @@ docker run -d \
   --env-file .env \
   -v "$PWD/data:/app/data" \
   -v "$PWD/tmp:/tmp/sticker-alchemy" \
-  sticker-alchemy
+  ghcr.io/shuijiao1/telegram-sticker-alchemy:latest
 ```
 
 View logs:
@@ -124,10 +152,17 @@ docker rm -f sticker-alchemy
 Update:
 
 ```bash
-git pull
-docker build -t sticker-alchemy .
+docker pull ghcr.io/shuijiao1/telegram-sticker-alchemy:latest
 docker rm -f sticker-alchemy
 # Then run the docker run command above again.
+```
+
+If you prefer building the image locally:
+
+```bash
+git clone https://github.com/shuijiao1/telegram-sticker-alchemy.git
+cd telegram-sticker-alchemy
+docker build -t sticker-alchemy .
 ```
 
 ### Option 3: Manual install
