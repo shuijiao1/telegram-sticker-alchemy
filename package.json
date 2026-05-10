@@ -1,0 +1,31 @@
+{
+  "name": "telegram-sticker-alchemy",
+  "version": "1.0.0",
+  "type": "module",
+  "private": false,
+  "scripts": {
+    "start": "node bot.js",
+    "check": "node --check bot.js"
+  },
+  "dependencies": {
+    "puppeteer-lottie-cli": "^1.0.9",
+    "sharp": "^0.33.5",
+    "telegraf": "^4.16.3"
+  },
+  "description": "A whitelist-first Telegram bot for converting images/GIFs/videos/stickers between sticker, PNG, and GIF formats.",
+  "license": "MIT",
+  "keywords": [
+    "telegram",
+    "bot",
+    "sticker",
+    "webp",
+    "gif",
+    "telegraf",
+    "sharp",
+    "ffmpeg",
+    "lottie"
+  ],
+  "engines": {
+    "node": ">=22"
+  }
+}

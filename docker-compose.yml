@@ -1,0 +1,12 @@
+services:
+  sticker-alchemy:
+    build: .
+    container_name: sticker-alchemy
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      TMP_DIR: ${TMP_DIR:-/tmp/sticker-alchemy}
+    volumes:
+      - ./data:/app/data
+      - ./tmp:${TMP_DIR:-/tmp/sticker-alchemy}
