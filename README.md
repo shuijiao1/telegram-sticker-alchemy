@@ -1,67 +1,71 @@
 # Sticker Alchemy 🧪
 
-A whitelist-first Telegram bot that turns pictures, GIFs, videos, and stickers into each other.
+**中文** | [English](README.en.md)
 
-Sticker Alchemy is built with Node.js, Telegraf, Sharp, FFmpeg, and Lottie rendering. It is designed for self-hosting: you bring your own Telegram Bot Token and your own Telegram user ID.
+一个默认白名单模式的 Telegram 图片 / GIF / 视频 / 贴纸互转 Bot。
 
-## Features
+Sticker Alchemy 基于 Node.js、Telegraf、Sharp、FFmpeg 和 Lottie 渲染实现，适合自托管使用。你需要自己填写 Telegram Bot Token 和允许使用 Bot 的 Telegram 用户 ID。
 
-- Image/photo → Telegram static sticker (`.webp`)
-- GIF/video/animation → Telegram video sticker (`.webm`)
-- Static sticker → PNG image
-- Telegram animated sticker (`.tgs`) → GIF
-- Telegram video sticker (`.webm`) → GIF
-- Direct-send mode: send supported media directly to the bot
-- Reply mode: reply to media with a command
-- Whitelist-first security: the bot is private by default
+## 功能
 
-## Commands
+- 图片 / 照片 → Telegram 静态贴纸（`.webp`）
+- GIF / 视频 / 动图 → Telegram 视频贴纸（`.webm`）
+- 静态贴纸 → PNG 图片
+- Telegram 动态贴纸（`.tgs`）→ GIF
+- Telegram 视频贴纸（`.webm`）→ GIF
+- 支持直接发送媒体给 Bot 自动转换
+- 支持回复媒体后使用命令转换
+- 默认白名单模式，默认不公开给所有人使用
 
-- `/start` or `/help` — show help
-- `/pts` or `/pic_to_sticker` — convert a replied image/photo/static sticker to sticker
-- `/pts 😋` — convert image to sticker with custom emoji metadata
-- `/gif` — convert a replied GIF/video/animation to video sticker
-- `/stp` or `/sticker_to_pic` — convert a replied sticker to PNG/GIF
+## 命令
 
-You can also send photos, stickers, GIFs, or short videos directly to the bot. It will pick the matching conversion automatically.
+- `/start` 或 `/help` — 查看帮助
+- `/pts` 或 `/pic_to_sticker` — 把回复的图片 / 照片 / 静态贴纸转成贴纸
+- `/pts 😋` — 转贴纸时指定 emoji
+- `/gif` — 把回复的 GIF / 视频 / 动图转成视频贴纸
+- `/stp` 或 `/sticker_to_pic` — 把回复的贴纸转成 PNG / GIF
 
-## Security model
+也可以直接把图片、贴纸、GIF、短视频发给 Bot，它会自动选择合适的转换方式。
 
-Sticker Alchemy is **whitelist-only by default**.
+## 安全模式
 
-You must set one of:
+Sticker Alchemy **默认是白名单模式**。
 
-- `OWNER_ID=your_telegram_numeric_user_id`
+你必须设置其中一个：
+
+- `OWNER_ID=你的 Telegram 数字用户 ID`
 - `ALLOWED_USER_IDS=123456789,987654321`
 
-If you really want a public bot, explicitly set:
+如果你真的想公开给所有人使用，需要显式设置：
 
 ```env
 PUBLIC_ACCESS=true
 ```
 
-Do not commit your `.env` file. `.env` is ignored by Git.
+不要提交 `.env` 文件。项目已经默认通过 `.gitignore` 忽略 `.env`。
 
-## Requirements
+## 准备工作
 
-### Docker installation
+### Docker 安装方式
 
-Recommended for most users:
+推荐大多数用户使用 Docker，需要：
 
 - Docker
-- Docker Compose plugin
-- A Telegram bot token from [@BotFather](https://t.me/BotFather)
-- Your numeric Telegram user ID from [@userinfobot](https://t.me/userinfobot) or [@RawDataBot](https://t.me/RawDataBot)
+- Docker Compose 插件
+- 从 [@BotFather](https://t.me/BotFather) 获取的 Telegram Bot Token
+- 你的 Telegram 数字用户 ID，可以通过 [@userinfobot](https://t.me/userinfobot) 或 [@RawDataBot](https://t.me/RawDataBot) 获取
 
-### Manual installation
+### 手动安装方式
+
+需要：
 
 - Node.js 22+
-- FFmpeg with `libvpx-vp9`
-- Native dependencies required by `sharp` and Chromium/Puppeteer
+- 带 `libvpx-vp9` 支持的 FFmpeg
+- `sharp` 和 Chromium / Puppeteer 所需的系统依赖
 
-Docker is easier because the image installs the needed system packages.
+Docker 更省心，因为镜像里会安装需要的系统依赖。
 
-## Quick start with Docker Compose
+## Docker Compose 快速安装
 
 ```bash
 git clone https://github.com/shuijiao1/telegram-sticker-alchemy.git
@@ -70,7 +74,7 @@ cp .env.example .env
 nano .env
 ```
 
-Fill in at least:
+至少填写：
 
 ```env
 BOT_TOKEN=123456:your_bot_token_here
@@ -78,34 +82,34 @@ OWNER_ID=123456789
 PUBLIC_ACCESS=false
 ```
 
-Start the bot:
+启动 Bot：
 
 ```bash
 docker compose up -d --build
 ```
 
-View logs:
+查看日志：
 
 ```bash
 docker compose logs -f
 ```
 
-Stop:
+停止：
 
 ```bash
 docker compose down
 ```
 
-Update later:
+以后更新：
 
 ```bash
 git pull
 docker compose up -d --build
 ```
 
-## Manual installation
+## 手动安装
 
-Install system packages on Debian/Ubuntu:
+Debian / Ubuntu 安装系统依赖：
 
 ```bash
 sudo apt update
@@ -115,7 +119,7 @@ sudo apt install -y nodejs npm ffmpeg ca-certificates file \
   libpangocairo-1.0-0 libpango-1.0-0 libcairo2 libgtk-3-0 fonts-noto-color-emoji
 ```
 
-Install and run:
+安装并运行：
 
 ```bash
 git clone https://github.com/shuijiao1/telegram-sticker-alchemy.git
@@ -126,36 +130,36 @@ nano .env
 npm start
 ```
 
-## Environment variables
+## 环境变量
 
-| Variable | Required | Default | Description |
+| 变量 | 是否必填 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `BOT_TOKEN` | Yes | - | Telegram Bot API token from BotFather |
-| `OWNER_ID` | Yes, unless `ALLOWED_USER_IDS` or public mode is set | - | Numeric Telegram user ID allowed to use the bot |
-| `ALLOWED_USER_IDS` | No | - | Comma-separated list of allowed numeric Telegram user IDs |
-| `PUBLIC_ACCESS` | No | `false` | Set to `true` to allow anyone to use the bot |
-| `TMP_DIR` | No | `/tmp/sticker-alchemy` | Temporary conversion directory |
+| `BOT_TOKEN` | 是 | - | 从 BotFather 获取的 Telegram Bot API Token |
+| `OWNER_ID` | 是，除非设置了 `ALLOWED_USER_IDS` 或公开模式 | - | 允许使用 Bot 的 Telegram 数字用户 ID |
+| `ALLOWED_USER_IDS` | 否 | - | 多个允许用户 ID，英文逗号分隔 |
+| `PUBLIC_ACCESS` | 否 | `false` | 设为 `true` 后允许所有人使用 |
+| `TMP_DIR` | 否 | `/tmp/sticker-alchemy` | 临时转换目录 |
 
-## Notes and limits
+## 注意事项和限制
 
-Telegram sticker limits are strict. The bot automatically compresses or downscales outputs, but very large or long videos may still fail.
+Telegram 对贴纸文件大小和格式限制比较严格。Bot 会自动压缩或降低参数，但太大、太长的视频仍然可能转换失败。
 
-Practical tips:
+建议：
 
-- Use short GIFs/videos for animated stickers.
-- Static stickers are exported as 512×512 WebP.
-- Animated/video stickers are converted to short VP9 WebM files.
-- Telegram animated `.tgs` stickers are rendered to GIF when converting sticker → image/GIF.
+- GIF / 视频尽量短一点，适合做动态贴纸。
+- 静态贴纸会导出为 512×512 WebP。
+- 动图 / 视频贴纸会转换为较短的 VP9 WebM。
+- Telegram 动态 `.tgs` 贴纸在“贴纸转图片/GIF”时会渲染成 GIF。
 
-## Development
+## 开发
 
-Syntax check:
+语法检查：
 
 ```bash
 npm run check
 ```
 
-Run locally:
+本地运行：
 
 ```bash
 BOT_TOKEN=xxx OWNER_ID=123456789 npm start
