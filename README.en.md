@@ -38,11 +38,12 @@ The bot uses whitelist mode by default. You must set `OWNER_ID` or `ALLOWED_USER
 
 ### Option 1: Docker Compose
 
-Recommended for most servers. This uses the prebuilt GHCR image by default.
+Recommended for most servers. The repository `docker-compose.yml` uses the prebuilt GHCR image by default, so local image building is not required.
 
 ```bash
-mkdir -p sticker-alchemy && cd sticker-alchemy
-curl -fsSL https://raw.githubusercontent.com/shuijiao1/telegram-sticker-alchemy/main/.env.example -o .env
+git clone https://github.com/shuijiao1/telegram-sticker-alchemy.git
+cd telegram-sticker-alchemy
+cp .env.example .env
 nano .env
 ```
 
@@ -52,25 +53,6 @@ Edit `.env` and fill in at least:
 BOT_TOKEN=123456:your_bot_token_here
 OWNER_ID=123456789
 PUBLIC_ACCESS=false
-```
-
-Create `compose.yml`:
-
-```bash
-cat > compose.yml <<'EOF'
-services:
-  sticker-alchemy:
-    image: ghcr.io/shuijiao1/telegram-sticker-alchemy:latest
-    container_name: sticker-alchemy
-    restart: unless-stopped
-    env_file:
-      - .env
-    environment:
-      TMP_DIR: ${TMP_DIR:-/tmp/sticker-alchemy}
-    volumes:
-      - ./data:/app/data
-      - ./tmp:${TMP_DIR:-/tmp/sticker-alchemy}
-EOF
 ```
 
 Start:
@@ -94,19 +76,12 @@ docker compose down
 Update later:
 
 ```bash
+git pull
 docker compose pull
 docker compose up -d
 ```
 
-If you prefer building from source locally:
-
-```bash
-git clone https://github.com/shuijiao1/telegram-sticker-alchemy.git
-cd telegram-sticker-alchemy
-cp .env.example .env
-nano .env
-docker compose up -d --build
-```
+If you prefer building from source locally, change `image:` in `docker-compose.yml` to `build: .`, or use the plain Docker local build instructions below.
 
 ### Option 2: Docker
 
