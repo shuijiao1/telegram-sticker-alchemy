@@ -33,9 +33,9 @@
 1. 到 [@BotFather](https://t.me/BotFather) 创建 Bot，拿到 `BOT_TOKEN`。
 2. 用 [@userinfobot](https://t.me/userinfobot) 或 [@RawDataBot](https://t.me/RawDataBot) 获取你的 Telegram 数字用户 ID。
 
-提供 3 种部署方式，**推荐一键脚本**。
+提供 3 种部署方式，
 
-### 方式一：一键脚本（推荐）
+### 方式一：一键脚本
 
 ```bash
 bash <(curl -Ls https://raw.githubusercontent.com/shuijiao1/Telegram-Sticker-Alchemy/main/deploy.sh)
@@ -48,7 +48,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/shuijiao1/Telegram-Sticker-Alc
 3. 生成 `.env` + `docker-compose.yml`。
 4. 执行 `docker compose pull && docker compose up -d`，并显示运行状态。
 
-### 方式二：Docker Compose（手动，无需 git clone）
+### 方式二：Docker Compose
 
 ```bash
 mkdir -p sticker-alchemy/data sticker-alchemy/tmp
@@ -76,7 +76,7 @@ docker compose up -d
 docker compose logs -f
 ```
 
-### 方式三：Docker 直跑（不用 Compose）
+### 方式三：Docker（不用 Compose）
 
 ```bash
 mkdir -p sticker-alchemy/data sticker-alchemy/tmp
